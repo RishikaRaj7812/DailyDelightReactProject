@@ -1,0 +1,90 @@
+import React, { useState } from 'react';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Fruit from './Fruit';
+import Vegetable from './Vegetable';
+import Snacks from './Snacks';
+import Milk from './Milk';
+import Chocolate from './Chocolate';
+import Signing from './Signing';
+import Cart from './Cart';
+import AboutUs from './AboutUs';
+import ContactUs from './ContactUs';
+
+import './App.css';    
+import { useSelector } from 'react-redux';
+import Order from './Order';
+
+function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    alert(`Searching for "${searchQuery}"`);
+    // You can integrate actual search/filter logic here
+  };
+
+  const cart = useSelector((state) => state.cart);
+  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  return (
+    <BrowserRouter>
+      <div className="app">
+        <header className="navbar">
+          <div className="logo">
+            <Link to="/home" className="logo">DailyDelights</Link>
+          </div>
+          <nav className="nav-links">
+            <Link to="/home">Home</Link>
+            <Link to="/fruit">Fruit</Link>
+            <Link to="/vegetable">Vegetable</Link>
+            <Link to="/snacks">Snacks</Link>
+            <Link to="/milk">Milk</Link>
+            <Link to="/chocolate">Chocolate</Link>
+            <Link to="/signing">Sign</Link>
+      
+            <div className="cart-link-wrapper">
+              <Link to="/cart" className="cart-link">
+                   Cart🛒
+                {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
+              </Link>
+            </div>
+
+            <Link to="/order">Order</Link>
+            <Link to="/about">About Us</Link>
+            <Link to="/contact">Contact Us</Link>
+          </nav>
+
+          {/* Search Bar */}
+          <form className="search-bar" onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit">Search</button>
+          </form>
+        </header>
+
+        <main className="content">
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/fruit" element={<Fruit />} />
+            <Route path="/vegetable" element={<Vegetable />} />
+            <Route path="/snacks" element={<Snacks />} />
+            <Route path="/milk" element={<Milk />} />
+            <Route path="/chocolate" element={<Chocolate />} />
+            <Route path="/signing" element={<Signing />} />
+            <Route path="/cart" element={<Cart/>} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;

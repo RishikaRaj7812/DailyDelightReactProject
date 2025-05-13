@@ -1,0 +1,235 @@
+/* === Keyframe Animations === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(163, 84, 58, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(163, 84, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(163, 84, 58, 0); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+  60% { transform: scale(1.05) translateY(-5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes counterPulse {
+  0% { transform: scale(1); background-color: transparent; }
+  50% { transform: scale(1.2); background-color: #f0f0f0; }
+  100% { transform: scale(1); background-color: transparent; }
+}
+
+@keyframes bounceCart {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+
+/* === Container === */
+.product-container {
+  padding: 50px;
+  background-color: #ebf8e6;
+  text-align: center;
+  animation: fadeInUp 1s ease;
+}
+
+/* === Title === */
+.product-title {
+  font-size: 2.5rem;
+  color: #cf62e8;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-family: cursive;
+  margin-top: 10px;
+}
+
+/* === Grid === */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 45px;
+  justify-content: center;
+}
+
+/* === Product Card === */
+.product-card {
+  background-color: #fff;
+  border: 2px solid #ffe5d4;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  opacity: 1;
+  transform: translateY(10px);
+  /* animation: bounceIn 0.6s ease forwards; */
+  
+}
+
+/* Hover effects */
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* === Image === */
+.product-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+
+}
+
+/* === Text === */
+.product-card h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.product-price {
+  color: rgb(74, 189, 186);
+  font-weight: 600;
+}
+
+.product-card p {
+  font-size: 0.85rem;
+  color: #5eaaa8;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 2px 0;
+}
+
+/* === Quantity Controls === */
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cart-qty-count {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 30px;
+  text-align: center;
+  animation: counterPulse 0.3s ease;
+}
+
+/* === Quantity Buttons === */
+.qty-btn {
+  padding: 6px 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 1;
+  border: 2px solid;
+  background-color: transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
+}
+
+.qty-increase {
+  border-color: #38b000;
+  color: #38b000;
+}
+
+.qty-increase:hover {
+  background-color: #e6f9e6;
+}
+
+.qty-decrease {
+  border-color: #e63946;
+  color: #e63946;
+}
+
+.qty-decrease:hover {
+  background-color: #fdeaea;
+}
+
+/* === Add to Cart Button === */
+.add-to-cart-btn {
+  background-color: #a3543a;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #128153;
+  animation: pulseGlow 1s infinite, wiggle 0.4s ease;
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.95);
+}
+
+/* === Floating Cart Icon === */
+.floating-cart {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #38b000;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: bounceCart 2s infinite;
+  cursor: pointer;
+}
+
+/* === Shimmer Loading (optional placeholder) === */
+.shimmer {
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 8px;
+}

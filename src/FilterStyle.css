@@ -1,0 +1,49 @@
+.price-filter {
+  background-color: #f0fce9;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Label for price display */
+.price-label {
+  font-weight: bold;
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Wider slider bar with fixed width */
+.price-slider {
+  width: 600px;             /* Fixed wider width for the slider */
+  max-width: 90%;           /* Restrict max width to avoid overflow on small screens */
+  height: 10px;
+  appearance: none;
+  background: #ccc;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  display: block;           /* Ensure it behaves as a block element */
+  margin: 0 auto;           /* Center the slider */
+}
+
+/* Slider thumb (WebKit browsers like Chrome/Safari) */
+.price-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -7px; /* Align vertically with the track */
+}
+
+/* Slider thumb (Firefox) */
+.price-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+}
