@@ -4,6 +4,7 @@ import { AddToCart, IncrCart, DecrCart } from './store';
 import './ProductStyles.css';
 import PaginatedList from './PaginatedList';
 import PriceFilter from './PriceFilter';
+import { Link } from 'react-router-dom';
 
 function Fruit() {
   const fruitProducts = useSelector((globalState) => globalState.products.fruit);
@@ -12,7 +13,7 @@ function Fruit() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
+  const [maxPrice, setMaxPrice] = useState(500);
 
   const filteredProducts = fruitProducts.filter(
     (product) => product.price <= maxPrice
@@ -62,6 +63,7 @@ function Fruit() {
         setCurrentPage={setCurrentPage}
         renderItem={renderFruitProduct}
       />
+      <Link to="/cart" className="go-to-cart-button">🛒 Go to Cart</Link>
     </div>
   );
 }

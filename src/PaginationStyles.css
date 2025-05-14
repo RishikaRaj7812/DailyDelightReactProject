@@ -35,7 +35,7 @@
 
 /* Active/current page */
 .pagination-controls button[style*="bold"] {
-  background-color: #007bff;
+  background-color: #6b71df;
   color: white;
   border-color: #007bff;
 }

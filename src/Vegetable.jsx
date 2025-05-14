@@ -4,6 +4,7 @@ import { AddToCart, IncrCart, DecrCart } from './store';
 import './ProductStyles.css';
 import PaginatedList from './PaginatedList';
 import PriceFilter from './PriceFilter';
+import { Link } from 'react-router-dom';
 
 function Vegetable() {
   const vegProducts = useSelector((state) => state.products.veg);
@@ -12,7 +13,7 @@ function Vegetable() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
+  const [maxPrice, setMaxPrice] = useState(500);
 
   // Filter products based on price
   const filteredProducts = vegProducts.filter(
@@ -61,6 +62,7 @@ function Vegetable() {
         setCurrentPage={setCurrentPage}
         renderItem={renderVegProduct}
       />
+      <Link to="/cart" className="go-to-cart-button">🛒 Go to Cart</Link>
     </div>
   );
 }

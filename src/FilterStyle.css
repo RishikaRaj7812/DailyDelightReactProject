@@ -1,5 +1,6 @@
+/* Container for the price filter */
 .price-filter {
-  background-color: #f0fce9;
+  background-color: #e0ecf2;
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
@@ -14,21 +15,29 @@
   margin-bottom: 15px;
 }
 
-/* Wider slider bar with fixed width */
+/* Slider styling */
 .price-slider {
-  width: 600px;             /* Fixed wider width for the slider */
-  max-width: 90%;           /* Restrict max width to avoid overflow on small screens */
+  width: 600px;             /* Fixed width for the slider */
+  max-width: 90%;           /* Prevent overflow on small screens */
   height: 10px;
   appearance: none;
-  background: #ccc;
   border-radius: 10px;
   outline: none;
   cursor: pointer;
-  display: block;           /* Ensure it behaves as a block element */
-  margin: 0 auto;           /* Center the slider */
+  display: block;
+  margin: 0 auto;
+  /* Dynamic gradient to show the covered range */
+  --fill-percentage: 0%;
+  background: linear-gradient(
+    to right,
+    #b0d6a8 0%,                /* Dark color for the covered range */
+    #d75d5d var(--fill-percentage),
+    #a0dc93 var(--fill-percentage), /* Unfilled portion */
+    #b05dd7 100%
+  );
 }
 
-/* Slider thumb (WebKit browsers like Chrome/Safari) */
+/* Slider thumb (WebKit browsers: Chrome, Safari, Edge) */
 .price-slider::-webkit-slider-thumb {
   appearance: none;
   width: 24px;
@@ -36,7 +45,7 @@
   background: #007bff;
   border-radius: 50%;
   cursor: pointer;
-  margin-top: -7px; /* Align vertically with the track */
+  margin-top: -7px;
 }
 
 /* Slider thumb (Firefox) */
@@ -46,4 +55,19 @@
   background: #007bff;
   border-radius: 50%;
   cursor: pointer;
+}
+
+/* Firefox: Darken the filled portion of the track */
+.price-slider::-moz-range-progress {
+  background: #555; /* Dark color for the covered range */
+  height: 10px;
+  border-radius: 10px;
+}
+
+/* Firefox: Style the entire track (for consistency) */
+.price-slider::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  background: #c4c1f3;
+  border-radius: 10px;
 }

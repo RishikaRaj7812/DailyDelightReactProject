@@ -4,13 +4,14 @@ import './ProductStyles.css';
 import { AddToCart, IncrCart, DecrCart } from './store';
 import PaginatedList from './PaginatedList';
 import PriceFilter from './PriceFilter';
+import { Link } from 'react-router-dom';
 
 function Chocolate() {
   const chocolateProducts = useSelector((globalState) => globalState.products.chocolates);
   const cartItems = useSelector((globalState) => globalState.cart);
   const dispatch = useDispatch();
 
-  const [maxPrice, setMaxPrice] = useState(1000); // Only maxPrice is needed for PriceFilter
+  const [maxPrice, setMaxPrice] = useState(500); // Only maxPrice is needed for PriceFilter
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter products based on maxPrice
@@ -78,6 +79,7 @@ function Chocolate() {
         setCurrentPage={setCurrentPage}
         renderItem={renderChocolateProduct}
       />
+      <Link to="/cart" className="go-to-cart-button">🛒 Go to Cart</Link>
     </div>
   );
 }

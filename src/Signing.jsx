@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { auth, RecaptchaVerifier, signInWithPhoneNumber } from './firebase';
-import { login } from './store'; // Import the login action from your store
+import { login, logout } from './store';
 import './Signing.css';
-import { v4 as uuidv4 } from 'uuid';
 
 function Signing() {
   const [isSignUp, setIsSignUp] = useState(true);
   const [usePhoneLogin, setUsePhoneLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
-  const [redirectCountdown, setRedirectCountdown] = useState(5); // Countdown for redirect
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,6 +21,9 @@ function Signing() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentEmail = useSelector((state) => state.user.email); // Use email instead of userId
+  const loggedInUsers = useSelector((state) => state.user.loggedInUsers);
+  const registeredEmails = useSelector((state) => state.user.registeredEmails);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,44 +36,32 @@ function Signing() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const userId = uuidv4(); // Generate a unique user ID
+    const emailLowerCase = formData.email.toLowerCase();
+
+    if (isSignUp) {
+      if (registeredEmails.includes(emailLowerCase)) {
+        alert('User already exists with this email. Please log in or use a different email.');
+        return;
+      }
+    } else {
+      if (!registeredEmails.includes(emailLowerCase)) {
+        alert('No user found with this email. Please sign up first.');
+        return;
+      }
+    }
+
     const userData = {
       name: formData.name,
       email: formData.email,
-      password: formData.password, // Note: In a real app, hash the password!
+      password: formData.password,
     };
 
-    if (isSignUp) {
-      // On sign-up, store user data and automatically log them in
-      dispatch(login({ userId, userData }));
-      alert('Sign up successful! Logging you in...');
-    } else {
-      // On login, you should verify credentials (e.g., check email/password against a database)
-      // For this example, we'll assume the login is successful
-      dispatch(login({ userId, userData }));
-      alert('Login successful');
-    }
+    // Use email as the identifier instead of userId
+    dispatch(login({ email: emailLowerCase, userData }));
+    alert(isSignUp ? 'Sign up successful! Logging you in...' : 'Login successful');
 
-    setIsLoggedIn(true);
     setFormData({ name: '', email: '', password: '' });
   };
-
-  // Redirect to cart after successful login
-  useEffect(() => {
-    if (isLoggedIn) {
-      const timer = setInterval(() => {
-        setRedirectCountdown((prev) => {
-          if (prev === 1) {
-            clearInterval(timer);
-            navigate('/cart'); // Redirect to cart page
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [isLoggedIn, navigate]);
 
   const sendOTP = () => {
     if (!window.recaptchaVerifier) {
@@ -106,16 +94,13 @@ function Signing() {
     confirmation
       .confirm(otp)
       .then((result) => {
-        const userId = result.user.uid || uuidv4(); // Use Firebase UID or generate a new one
+        const phoneIdentifier = result.user.uid || phoneNumber; // Use Firebase UID or phone number as identifier
         const userData = {
           phone: phoneNumber,
         };
 
-        // Store user data in Redux
-        dispatch(login({ userId, userData }));
-
-        // Mark as logged in and proceed
-        setIsLoggedIn(true);
+        // For phone login, use phone number as the identifier (since there's no email)
+        dispatch(login({ email: phoneIdentifier, userData }));
       })
       .catch((error) => {
         alert('Invalid OTP');
@@ -123,7 +108,13 @@ function Signing() {
       });
   };
 
-  
+  const handleLogout = () => {
+    dispatch(logout(currentEmail)); // Use email instead of userId
+    setPhoneNumber('');
+    setOtp('');
+    setConfirmation(null);
+    alert('Logged out successfully');
+  };
 
   return (
     <div className="auth-wrapper">
@@ -140,10 +131,32 @@ function Signing() {
 
       <div className="signing-page">
         <div className="form-container">
-          {isLoggedIn ? (
-            <h2>
-              🎉 Login Successful! Redirecting to your cart in {redirectCountdown} seconds...
-            </h2>
+          {currentEmail ? (
+            <div>
+              <h2>🎉 Login Successful!</h2>
+              <p>You are logged in with Email: <strong>{currentEmail}</strong></p>
+              <button className="button" onClick={handleLogout}>
+                Logout
+              </button>
+              <button className="button" onClick={() => navigate('/cart')} style={{ marginLeft: '10px' }}>
+                Go to Cart
+              </button>
+
+              <div style={{ marginTop: '20px' }}>
+                <h3>Currently Logged-In Users:</h3>
+                {loggedInUsers.length > 0 ? (
+                  <ul>
+                    {loggedInUsers.map((user) => (
+                      <li key={user.email}>
+                        Email: {user.email} {user.userData.phone ? `| Phone: ${user.userData.phone}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No users are currently logged in.</p>
+                )}
+              </div>
+            </div>
           ) : (
             <>
               <h2>{isSignUp ? 'Sign Up' : 'Login'}</h2>
@@ -274,7 +287,6 @@ function Signing() {
         </div>
       </div>
 
-      {/* Required for Firebase Recaptcha */}
       <div id="recaptcha-container"></div>
     </div>
   );

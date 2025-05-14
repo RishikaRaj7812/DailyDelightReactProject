@@ -22,7 +22,7 @@ function PaginatedList({ items, itemsPerPage, currentPage, setCurrentPage, rende
 
       <div className="pagination-controls">
         <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
-          Previous
+           ◀ Previous
         </button>
 
         {Array.from({ length: totalPages }, (_, index) => (
@@ -36,7 +36,7 @@ function PaginatedList({ items, itemsPerPage, currentPage, setCurrentPage, rende
         ))}
 
         <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
-          Next
+          Next ▶
         </button>
       </div>
     </>

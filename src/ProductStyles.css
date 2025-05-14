@@ -233,3 +233,22 @@
   animation: shimmer 1.2s infinite;
   border-radius: 8px;
 }
+.go-to-cart-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #d8b265;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.go-to-cart-button:hover {
+  background-color: #c7393c;
+  color: white;
+}
