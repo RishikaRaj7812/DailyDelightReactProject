@@ -218,6 +218,7 @@ function App() {
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/admin" element={<AdminPanel />} />
                 <Route path="/registration" element={<Registration />} />
+                <Route path='/' element={<Home />} />
               </Routes>
             </main>
           </div>
