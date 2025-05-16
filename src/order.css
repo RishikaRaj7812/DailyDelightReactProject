@@ -165,3 +165,23 @@
 .order-total strong {
   color: #2c3e50;
 }
+
+.show-more-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.show-more-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.show-more-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}

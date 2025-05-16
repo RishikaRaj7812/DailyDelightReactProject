@@ -1,6 +1,6 @@
 /* Signing.css */
 
-.signing-page {
+/* .signing-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -160,4 +160,172 @@ h2 {
   max-width: 300px;
   margin-top: 1rem;
   border-radius: 10px;
+} */
+
+/* Reset default margins and ensure full-screen layout */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-wrapper {
+  display: flex;
+  min-height: 100vh; /* Full viewport height */
+  background: linear-gradient(to right, #e0f7fa 50%); /* Gradient background like the image */
+  font-family: Arial, sans-serif;
+}
+
+/* Left panel (info-panel) - takes 50% of the screen */
+.info-panel {
+  flex: 1; /* Takes half the width */
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: transparent; /* Background is handled by the wrapper */
+}
+
+.info-panel h1 {
+  font-size: 2.5rem;
+  color: #2e7d32; /* Dark green color */
+  margin-bottom: 10px;
+}
+
+.info-panel p {
+  font-size: 1.2rem;
+  color: #424242;
+  margin-bottom: 20px;
+}
+
+.info-panel ul {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+.info-panel ul li {
+  font-size: 1.1rem;
+  color: #424242;
+  margin-bottom: 10px;
+}
+
+.side-image {
+  width: 100%;
+  max-width: 300px;
+  align-self: center;
+  border-radius: 10px;
+}
+
+/* Right panel (signing-page) - takes 50% of the screen */
+.signing-page {
+  flex: 1; /* Takes half the width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #faf6f6;  */
+}
+
+.form-container {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-container h2 {
+  font-size: 1.8rem;
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.welcome-msg {
+  font-size: 1rem;
+  color: #424242;
+  margin-bottom: 20px;
+}
+
+.login-benefits {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.login-benefits li {
+  font-size: 0.95rem;
+  color: #424242;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  margin-bottom: 20px;
+}
+
+.input-field label {
+  display: block;
+  font-size: 0.9rem;
+  color: #424242;
+  margin-bottom: 5px;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.error-text {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.forgot-password a {
+  font-size: 0.9rem;
+  color: #0288d1;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1b5e20;
+}
+
+.form-container p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #0288d1;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration: underline;
 }

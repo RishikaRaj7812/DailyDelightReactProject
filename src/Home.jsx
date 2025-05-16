@@ -16,7 +16,7 @@ function Home() {
       </header>
 
       <section className="home-categories">
-        <h2>Shop by Categories</h2>
+        <h1>Shop by Categories</h1><br />
         <div className="category-cards">
           <div className="category-card"><Link to="/fruit"><h2>🍎 Fruit</h2><p>Fresh and organic fruits.</p></Link></div>
           <div className="category-card"><Link to="/vegetable"><h2>🥕 Vegetable</h2><p>From farm to your table.</p></Link></div>

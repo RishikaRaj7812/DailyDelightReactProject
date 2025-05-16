@@ -10,8 +10,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 function Cart() {
   const cartObjects = useSelector((state) => state.cart);
-  const email = useSelector((state) => state.user?.email); // Use email instead of userId
-  const userData = useSelector((state) => state.user?.userData);
+  // Corrected state path based on store.js
+  const currentUser = useSelector((state) => state.users?.currentUser);
+  const email = currentUser?.email;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,10 +23,13 @@ function Cart() {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [redirectCountdown, setRedirectCountdown] = useState(10);
   const [finalPriceCache, setFinalPriceCache] = useState(0);
+  const [showBalloons, setShowBalloons] = useState(false);
+  const [showSparkler, setShowSparkler] = useState(false);
+  const [showPopMessage, setShowPopMessage] = useState(false);
 
   const couponRef = useRef();
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
-  const [couponCodeDiscountPer, setCouponCodeDiscountPer] = useState(0);
+  const [percentageDiscount, setPercentageDiscount] = useState(0);
+  const [couponFixedDiscount, setCouponFixedDiscount] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState('');
 
   const [newEmail, setNewEmail] = useState('');
@@ -36,31 +40,62 @@ function Cart() {
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
 
-  const userEmail = userData?.email || '';
+  const userEmail = email || '';
 
+  // Handle coupon application
   const handleApplyCoupon = () => {
     const couponCode = couponRef.current.value.trim().toUpperCase();
-    switch (couponCode) {
-      case 'RATAN10':
-      case 'RISHIKA10':
-        setCouponCodeDiscountPer(10);
-        setAppliedCoupon(couponCode);
-        break;
-      case 'RATAN20':
-      case 'RISHIKA20':
-        setCouponCodeDiscountPer(20);
-        setAppliedCoupon(couponCode);
-        break;
-      case 'RATAN30':
-      case 'RISHIKA30':
-        setCouponCodeDiscountPer(30);
-        setAppliedCoupon(couponCode);
-        break;
-      default:
-        alert('❌ Invalid Coupon Code');
-        setCouponCodeDiscountPer(0);
-        setAppliedCoupon('');
+    let fixedDiscount = 0;
+    let percentageDiscount = 0;
+    let couponMessage = '';
+
+    const subtotal = parseFloat(totalPrice);
+
+    if (couponCode === 'PATAKHA300' && subtotal >= 900) {
+      fixedDiscount = 300;
+      couponMessage = 'PATAKHA300';
+    } else if (couponCode === 'DAMAKA500' && subtotal >= 1200) {
+      fixedDiscount = 500;
+      couponMessage = 'DAMAKA500';
+    } else if (couponCode === 'FLAT700' && subtotal >= 1500) {
+      fixedDiscount = 700;
+      couponMessage = 'FLAT700';
+    } else if (couponCode === 'RATAN10') {
+      percentageDiscount = 10;
+      couponMessage = 'RATAN10';
+    } else if (couponCode === 'RISHIKA10') {
+      percentageDiscount = 10;
+      couponMessage = 'RISHIKA10';
+    } else if (couponCode === 'RATAN20') {
+      percentageDiscount = 20;
+      couponMessage = 'RATAN20';
+    } else if (couponCode === 'RISHIKA20') {
+      percentageDiscount = 20;
+      couponMessage = 'RISHIKA20';
+    } else if (couponCode === 'RATAN30') {
+      percentageDiscount = 30;
+      couponMessage = 'RATAN30';
+    } else if (couponCode === 'RISHIKA30') {
+      percentageDiscount = 30;
+      couponMessage = 'RISHIKA30';
+    } else {
+      alert('Invalid coupon code or your cart total is too low to apply this coupon.');
+      return;
     }
+
+    const percentageDiscountAmount = subtotal * (percentageDiscount / 100);
+    const priceAfterPercentageDiscount = subtotal - percentageDiscountAmount;
+    const totalDiscount = percentageDiscountAmount + fixedDiscount;
+
+    if (totalDiscount >= subtotal) {
+      alert('Total discount cannot exceed the cart subtotal.');
+      return;
+    }
+
+    setAppliedCoupon(couponMessage);
+    setPercentageDiscount(percentageDiscount);
+    setCouponFixedDiscount(fixedDiscount);
+    couponRef.current.value = '';
   };
 
   const CalculatingAmount = () => {
@@ -68,17 +103,18 @@ function Cart() {
       (total, item) => total + item.price * item.quantity,
       0
     );
-    const discountAmount = totalPrice * (appliedDiscount / 100);
-    const couponAmount = totalPrice * (couponCodeDiscountPer / 100);
-    const priceAfterDiscount = totalPrice - (discountAmount + couponAmount);
-    const taxPrice = priceAfterDiscount * 0.05;
-    const shipping = 50.00;
-    const finalPrice = priceAfterDiscount + taxPrice + shipping;
+
+    const percentageDiscountAmount = totalPrice * (percentageDiscount / 100);
+    const priceAfterPercentageDiscount = totalPrice - percentageDiscountAmount;
+    const priceAfterFixedDiscount = priceAfterPercentageDiscount - couponFixedDiscount;
+    const taxPrice = priceAfterFixedDiscount * 0.05;
+    const shipping = totalPrice > 100 ? 0.00 : 50.00;
+    const finalPrice = priceAfterFixedDiscount + taxPrice + shipping;
 
     return {
       totalPrice: totalPrice.toFixed(2),
-      discountAmount: discountAmount.toFixed(2),
-      couponDiscount: couponAmount.toFixed(2),
+      percentageDiscountAmount: percentageDiscountAmount.toFixed(2),
+      couponFixedDiscount: couponFixedDiscount.toFixed(2),
       taxPrice: taxPrice.toFixed(2),
       finalPrice: finalPrice.toFixed(2),
       finalPriceNum: parseFloat(finalPrice.toFixed(2)),
@@ -88,13 +124,20 @@ function Cart() {
 
   const {
     totalPrice,
-    discountAmount,
-    couponDiscount,
+    percentageDiscountAmount,
+    couponFixedDiscount: couponFixedDiscountAmount,
     taxPrice,
     shipping,
     finalPrice,
     finalPriceNum,
   } = CalculatingAmount();
+
+  const amountNeededForFreeShipping = (100 - parseFloat(totalPrice)).toFixed(2);
+
+  const totalPriceNum = parseFloat(totalPrice);
+  const isFirstCheckboxEnabled = totalPriceNum >= 900;
+  const isSecondCheckboxEnabled = totalPriceNum >= 1200;
+  const isThirdCheckboxEnabled = totalPriceNum >= 1500;
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -102,14 +145,12 @@ function Cart() {
   };
 
   const handlePurchase = () => {
-    if (!email) {
-      alert('Please log in to proceed with the purchase.');
-      navigate('/signing');
-      return;
-    }
+    console.log('Starting handlePurchase...');
+    console.log('Email:', email, 'UserEmail:', userEmail);
 
-    if (!userEmail) {
-      alert('No email found. Please log in with an email address to receive the receipt.');
+    if (!email) {
+      console.log('No email found, redirecting to /signing');
+      alert('Please log in to proceed with the purchase.');
       navigate('/signing');
       return;
     }
@@ -117,6 +158,7 @@ function Cart() {
     let emailToUse = userEmail;
     if (newEmail.trim()) {
       if (!validateEmail(newEmail)) {
+        console.log('Invalid alternate email:', newEmail);
         setEmailError('❌ Please enter a valid email address.');
         return;
       }
@@ -125,10 +167,21 @@ function Cart() {
     }
 
     if (finalPriceNum <= 0) {
+      console.log('Invalid payment amount:', finalPriceNum);
       alert('❌ Invalid payment amount. Please check discounts and try again.');
       return;
     }
 
+    if (paymentMethod === 'card') {
+      console.log('Card payment selected. Card details:', { cardName, cardNumber, expiry, cvv });
+      if (!cardName || !cardNumber || !expiry || !cvv) {
+        console.log('Missing card details');
+        alert('Please fill in all card details.');
+        return;
+      }
+    }
+
+    console.log('Proceeding with purchase...');
     setFinalPriceCache(finalPrice);
     const purchaseDateTime = new Date().toLocaleString();
     let uniqueId = 'ORD' + uuidv4().slice(0, 8).toUpperCase();
@@ -140,15 +193,8 @@ function Cart() {
       finalPrice: finalPrice,
     };
 
-    if (paymentMethod === 'card') {
-      if (!cardName || !cardNumber || !expiry || !cvv) {
-        alert('Please fill in all card details.');
-        return;
-      }
-    }
-
+    console.log('Dispatching addOrder and clearCart');
     dispatch(addOrder(purchaseDetails));
-    setPurchased(true);
     dispatch(clearCart());
 
     const githubRawBase = 'https://raw.githubusercontent.com/RishikaRaj7812/Images/main';
@@ -160,19 +206,20 @@ function Cart() {
       orders: purchaseDetails.items.map((item) => ({
         name: item.name,
         price: item.price.toFixed(2),
-        units: item.quantity,
+        quantity: item.quantity,
         image_url: `${githubRawBase}/${item.image.replace(/^\/+/, '')}`,
       })),
       cost: {
         subtotal: totalPrice,
-        shipping: 50,
-        discount: discountAmount,
-        coupon: couponDiscount,
+        shipping: shipping,
+        discount: percentageDiscountAmount,
+        coupon: couponFixedDiscountAmount,
         tax: taxPrice,
         total: finalPriceNum,
       },
     };
 
+    console.log('Sending email via EmailJS:', templateParams);
     emailjs
       .send('rishika123', 'template_30dc0ip', templateParams, 'SX77ys4f6EnCgI0xf')
       .then(() => {
@@ -183,22 +230,42 @@ function Cart() {
         console.error('❌ Failed to send email:', error);
         alert('❌ Failed to send receipt. Please check your email settings.');
       });
+
+    console.log('Setting showBalloons to true');
+    setShowBalloons(true);
   };
 
   const handleProceedToCheckout = () => {
+    console.log('Proceeding to checkout. Email:', email);
     if (email) {
       setShowPaymentOptions(true);
     } else {
+      console.log('No email, redirecting to /signing');
       alert('Please log in to proceed with the checkout.');
       navigate('/signing');
     }
   };
 
+  const handlePopBalloon = () => {
+    console.log('Popping balloon');
+    setShowBalloons(false);
+    setShowSparkler(true);
+    setShowPopMessage(true);
+    setTimeout(() => {
+      console.log('Ending animation, setting purchased to true');
+      setShowSparkler(false);
+      setShowPopMessage(false);
+      setPurchased(true);
+    }, 2000);
+  };
+
   useEffect(() => {
     if (purchased) {
+      console.log('Purchased, starting redirect countdown');
       const timer = setInterval(() => {
         setRedirectCountdown((prev) => {
           if (prev === 1) {
+            console.log('Redirecting to /order');
             clearInterval(timer);
             navigate('/order');
             return 0;
@@ -211,6 +278,7 @@ function Cart() {
   }, [purchased, navigate]);
 
   const handleSelectPaymentMethod = (method) => {
+    console.log('Selected payment method:', method);
     setPaymentMethod(method);
   };
 
@@ -289,6 +357,12 @@ function Cart() {
             {emailError && <p style={{ color: 'red', marginTop: '8px' }}>{emailError}</p>}
           </div>
 
+          {parseFloat(totalPrice) < 100 && (
+            <div className="free-shipping-message">
+              🛒 Add ₹{amountNeededForFreeShipping} more for free shipping!
+            </div>
+          )}
+
           <div className="cart-summary-section">
             <div className="cart-summary">
               <h2>💳 Payment Details</h2>
@@ -298,17 +372,17 @@ function Cart() {
                 <span>₹{totalPrice}</span>
               </div>
 
-              {appliedDiscount > 0 && (
+              {percentageDiscount > 0 && (
                 <div className="summary-row discount-row">
-                  <span>💸 Discount ({appliedDiscount}%):</span>
-                  <span>-₹{discountAmount}</span>
+                  <span>💸 Discount ({percentageDiscount}%):</span>
+                  <span>-₹{percentageDiscountAmount}</span>
                 </div>
               )}
 
-              {couponCodeDiscountPer > 0 && (
+              {couponFixedDiscount > 0 && (
                 <div className="summary-row discount-row">
-                  <span>🏷️ Coupon ({couponCodeDiscountPer}%):</span>
-                  <span>-₹{couponDiscount}</span>
+                  <span>🏷️ Coupon Discount:</span>
+                  <span>-₹{couponFixedDiscount}</span>
                 </div>
               )}
 
@@ -319,7 +393,15 @@ function Cart() {
 
               <div className="summary-row tax-row">
                 <span>🧾 Shipping Cost:</span>
-                <span>₹{shipping}</span>
+                <span>
+                  {shipping === '0.00' ? (
+                    <span className="free-shipping">
+                      <s>₹50.00</s> Free
+                    </span>
+                  ) : (
+                    `₹${shipping}`
+                  )}
+                </span>
               </div>
 
               <div className="summary-row total-row">
@@ -335,18 +417,19 @@ function Cart() {
             <div className="discount-coupon-side">
               <h2>Apply Discount:</h2>
               <div className="discount-buttons">
-                <button onClick={() => setAppliedDiscount(10)}>
+                <button onClick={() => setPercentageDiscount(10)}>
                   <FaPercent style={{ marginRight: '5px' }} /> Get 10% Discount
                 </button>
-                <button onClick={() => setAppliedDiscount(20)}>
+                <button onClick={() => setPercentageDiscount(20)}>
                   <FaGift style={{ marginRight: '5px' }} /> Get 20% Discount
                 </button>
-                <button onClick={() => setAppliedDiscount(30)}>
+                <button onClick={() => setPercentageDiscount(30)}>
                   <FaFire style={{ marginRight: '5px' }} /> Get 30% Discount
                 </button>
               </div>
 
               <div className="coupon-form-wrapper">
+                <h3>Apply coupons when your amount exceeds the specified limit</h3>
                 <div className="coupon-input-wrapper">
                   <input
                     type="text"
@@ -357,6 +440,33 @@ function Cart() {
                   <button className="styled-coupon-button" onClick={handleApplyCoupon}>
                     Apply Coupon
                   </button>
+                </div>
+
+                <div className="coupon-checkboxes">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      disabled={!isFirstCheckboxEnabled}
+                      checked={isFirstCheckboxEnabled}
+                    />
+                    PATAKHA300 (₹900+)
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      disabled={!isSecondCheckboxEnabled}
+                      checked={isSecondCheckboxEnabled}
+                    />
+                    DAMAKA500 (₹1200+)
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      disabled={!isThirdCheckboxEnabled}
+                      checked={isThirdCheckboxEnabled}
+                    />
+                    FLAT700 (₹1500+)
+                  </label>
                 </div>
               </div>
 
@@ -439,23 +549,51 @@ function Cart() {
         </div>
       )}
 
-      {purchased && (
+      {showBalloons && (
+        <div className="balloon-container">
+          <div className="balloon balloon-1" onClick={handlePopBalloon}>
+            🎈
+          </div>
+          <div className="balloon balloon-2" onClick={handlePopBalloon}>
+            🎈
+          </div>
+          <div className="balloon balloon-3" onClick={handlePopBalloon}>
+            🎈
+          </div>
+        </div>
+      )}
+
+      {showSparkler && (
+        <div className="sparkler-container">
+          <div className="sparkler"></div>
+          <div className="sparkler"></div>
+          <div className="sparkler"></div>
+        </div>
+      )}
+
+      {showPopMessage && (
+        <div className="pop-message">
+          🎉 Woohoo! Your order has been placed successfully!
+        </div>
+      )}
+
+      {purchased && !showBalloons && !showSparkler && !showPopMessage && (
         <div>
-        <h2 className="thank-you-message">Your Order placed Successfully...</h2>
-        <h2 className="thank-you-message">
-          🎉 Thank you for your purchase! Redirecting to your{' '}
-          <a href="/order" onClick={() => navigate('/order')}>
-            orders
-          </a>{' '}
-          in {redirectCountdown} seconds...
-        </h2>
+          <h2 className="thank-you-message">Your Order placed Successfully...</h2>
+          <h2 className="thank-you-message">
+            🎉 Thank you for your purchase! Redirecting to your{' '}
+            <a href="/order" onClick={() => navigate('/order')}>
+              orders
+            </a>{' '}
+            in {redirectCountdown} seconds...
+          </h2>
         </div>
       )}
 
       {cartObjects.length === 0 && !purchased && (
         <div className="empty-cart">
           <h2>Your cart is empty.</h2>
-          <button onClick={() => navigate('/home')} className="shop-now-button" style={{backgroundColor:'lightblue'}}>
+          <button onClick={() => navigate('/home')} className="shop-now-button" style={{ backgroundColor: 'lightblue' }}>
             Shop Now
           </button>
         </div>

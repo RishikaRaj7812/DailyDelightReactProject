@@ -5,6 +5,9 @@
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* Header */
@@ -34,9 +37,6 @@
   border-radius: 20px;
   font-weight: 500;
 }
-
-
-
 
 /* Cart table */
 .cart-table {
@@ -132,7 +132,7 @@
   background-color: #e63946;
 }
 
-/* Total */
+/* Cart total */
 .cart-total {
   font-size: 1.5rem;
   font-weight: bold;
@@ -140,12 +140,13 @@
   margin-top: 20px;
 }
 
-/* Empty cart message */
+/* General paragraph styling */
 .cart-container p {
   font-size: 1.2rem;
   color: #777;
 }
 
+/* Discount buttons */
 .discount-buttons button {
   margin-right: 10px;
   padding: 8px 16px;
@@ -165,13 +166,10 @@
   justify-content: center;
   gap: 12px;
   margin: 20px 50px;
+  flex-direction: column;
 }
 
-.discount-buttons h3 {
-  margin-right: 16px;
-  line-height: 32px;
-}
-
+/* Cart summary */
 .cart-summary {
   border: 1px solid #e0e0e0;
   padding: 25px 35px;
@@ -186,6 +184,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
+  min-width: 0px;
+  background-color: #f4e7f3;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .cart-summary h2 {
@@ -203,6 +207,7 @@
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px dashed #1a0202;
+  margin: 10px 0;
 }
 
 .summary-row span:first-child {
@@ -229,6 +234,13 @@
   padding-top: 12px;
 }
 
+.discount-row span,
+.tax-row span,
+.total-row span {
+  font-size: 18px;
+}
+
+/* Checkout button */
 .checkout-button {
   margin-top: 20px;
   padding: 12px;
@@ -245,15 +257,18 @@
   background-color: #21867a;
 }
 
+/* Coupon applied message */
 .coupon-applied-msg {
   margin-top: 10px;
   color: green;
   font-weight: 500;
 }
 
+/* Coupon form wrapper */
 .coupon-form-wrapper {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center children horizontally */
   margin-top: 20px;
 }
 
@@ -297,7 +312,42 @@
   background-color: #00b8e6;
 }
 
+/* Coupon checkboxes */
+.coupon-checkboxes {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px; /* Match the width of the coupon input wrapper */
+  align-items: flex-start; /* Align checkboxes to the left */
+}
 
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.checkbox-label input {
+  width: 16px;
+  height: 16px;
+  cursor: not-allowed;
+}
+
+.checkbox-label input:disabled {
+  opacity: 0.5;
+}
+
+.checkbox-label input:not(:disabled) {
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* QR code wrapper */
 .qr-code-wrapper {
   margin-top: 20px;
   padding: 15px;
@@ -313,6 +363,8 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+/* Payment method */
 .payment-method {
   text-align: center;
   margin-top: 20px;
@@ -331,21 +383,74 @@
   background-color: #0056b3;
 }
 
+.payment-method button.selected {
+  background-color: #28a745;
+}
+
+/* Card payment form */
 .card-payment-form {
-  margin-top: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.card-payment-form .form-group {
-  margin-bottom: 15px;
+.card-payment-form h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .card-payment-form input {
-  padding: 10px;
   width: 100%;
-  max-width: 400px;
-  margin: 5px 0;
+  padding: 12px 15px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-payment-form input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.card-payment-form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.card-payment-form .confirm-payment-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.card-payment-form .confirm-payment-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.card-payment-form .confirm-payment-button:active {
+  transform: translateY(0);
 }
 
 .card-payment-form button {
@@ -360,43 +465,7 @@
   background-color: #218838;
 }
 
-.thank-you-message {
-  font-size: 20px;
-  font-weight: bold;
-  color: green;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-
-.discount-row,
-.tax-row,
-.total-row {
-  font-weight: bold;
-}
-
-.discount-row span,
-.tax-row span,
-.total-row span {
-  font-size: 18px;
-}
-.card-payment-form {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.card-payment-form h3 {
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
+/* Form group and row */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -439,6 +508,8 @@
 .confirm-payment-button:hover {
   background-color: #218838;
 }
+
+/* Email input */
 .email-input {
   margin: 15px auto;
   text-align: center;
@@ -452,6 +523,7 @@
   border: 3px solid #ccc;
 }
 
+/* Cart discount payment wrapper */
 .cart-discount-payment-wrapper {
   display: flex;
   justify-content: space-between;
@@ -465,10 +537,12 @@
   min-width: 300px;
 }
 
-.discount-coupon-section {
+.discoupount-coupon-section {
   flex: 1;
   min-width: 300px;
 }
+
+/* Discount coupon section */
 .discount-coupon-section {
   background-color: #f6f0fc;
   border-radius: 16px;
@@ -535,6 +609,8 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+/* Cart summary section */
 .cart-summary-section {
   display: flex;
   justify-content: space-between;
@@ -544,15 +620,21 @@
   flex-wrap: wrap;
 }
 
-.cart-summary {
-  flex: 1;
-  min-width: 0px;
-  background-color: #f4e7f3;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+/* Free shipping */
+.free-shipping {
+  color: #28a745;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
+.free-shipping s {
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* Discount coupon side */
 .discount-coupon-side {
   flex: 1;
   max-width: 480px;
@@ -561,7 +643,7 @@
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   margin-top: 42px;
-  height: 520px;
+  height: auto;
 }
 
 .discount-buttons button {
@@ -569,11 +651,7 @@
   margin-bottom: 0.5rem;
 }
 
-.payment-method {
-  text-align: center;
-  margin-top: 20px;
-}
-
+/* Button group */
 .button-group {
   display: flex;
   justify-content: center;
@@ -589,126 +667,24 @@
   display: inline-block;
   background-color: #f9f9f9;
 }
-.card-payment-form {
-  max-width: 400px; /* Limit the form width for better readability */
-  margin: 20px auto; /* Center the form with some vertical spacing */
-  padding: 20px;
-  background-color: #f9f9f9; /* Light background for the form */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  text-align: center; /* Center-align the content */
-}
 
-/* Style the heading */
-.card-payment-form h3 {
-  font-size: 1.5rem;
-  color: #333; /* Dark text color */
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px; /* Space between emoji and text */
-}
-
-/* Style the input fields */
-.card-payment-form input {
-  width: 100%; /* Full width of the container */
-  padding: 12px 15px; /* Comfortable padding */
-  margin-bottom: 15px; /* Space between inputs */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 1rem; /* Readable font size */
-  color: #333; /* Dark text color */
-  background-color: #fff; /* White background */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-}
-
-/* Placeholder styling */
-.card-payment-form input::placeholder {
-  color: #999; /* Light gray placeholder text */
-  font-style: italic;
-}
-
-/* Focus state for inputs */
-.card-payment-form input:focus {
-  outline: none;
-  border-color: #007bff; /* Highlight border on focus */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Subtle glow on focus */
-}
-
-/* Style the Confirm Payment button */
-.card-payment-form .confirm-payment-button {
-  width: 100%; /* Full width button */
-  padding: 12px;
-  background-color: #007bff; /* Blue background */
-  color: #fff; /* White text */
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  font-weight: 600; /* Slightly bold text */
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease; /* Smooth transitions */
-}
-
-/* Hover effect for the button */
-.card-payment-form .confirm-payment-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  transform: translateY(-1px); /* Slight lift effect */
-}
-
-/* Active state for the button */
-.card-payment-form .confirm-payment-button:active {
-  transform: translateY(0); /* Reset lift on click */
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .card-payment-form {
-    max-width: 100%; /* Full width on small screens */
-    padding: 15px;
-  }
-
-  .card-payment-form h3 {
-    font-size: 1.3rem; /* Smaller heading on mobile */
-  }
-
-  .card-payment-form input {
-    padding: 10px; /* Slightly smaller padding on mobile */
-    font-size: 0.9rem; /* Smaller font size */
-  }
-
-  .card-payment-form .confirm-payment-button {
-    padding: 10px;
-    font-size: 1rem; /* Smaller button text */
-  }
-}
-/* Container for the entire cart (optional, for context) */
-.cart-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-
-
-/* Style the Thank You message */
+/* Thank you message */
 .thank-you-message {
-  font-size: 1.8rem; /* Larger font size for emphasis */
-  color: #28a745; /* Green color to indicate success */
-  text-align: center; /* Center the message */
-  margin: 40px 0; /* Vertical spacing */
+  font-size: 1.8rem;
+  color: #28a745;
+  text-align: center;
+  margin: 40px 0;
   padding: 20px;
-  background-color: #e6f4ea; /* Light green background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #e6f4ea;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Space between emoji and text */
-  animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+  gap: 10px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Fade-in animation for the Thank You message */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -720,51 +696,258 @@
   }
 }
 
-/* Style the redirect countdown timer */
 .thank-you-message span {
-  font-weight: 700; /* Bold the countdown number */
-  color: #007bff; /* Blue color for the countdown */
+  font-weight: 700;
+  color: #007bff;
 }
 
-/* Style the Empty Cart message */
+/* Empty cart message */
 .cart-container h2:not(.thank-you-message) {
-  font-size: 1.6rem; /* Slightly smaller than the Thank You message */
-  color: #666; /* Gray color to indicate emptiness */
-  text-align: center; /* Center the message */
-  margin: 50px 0; /* Vertical spacing */
+  font-size: 1.6rem;
+  color: #666;
+  text-align: center;
+  margin: 50px 0;
   padding: 20px;
-  background-color: #f9f9f9; /* Light gray background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Space if you add an emoji */
-  animation: fadeIn 0.5s ease-in-out; /* Reuse the fade-in animation */
+  gap: 10px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Add an emoji to the Empty Cart message for visual interest */
 .cart-container h2:not(.thank-you-message)::before {
-  content: '🛒'; /* Shopping cart emoji */
-  font-size: 1.8rem; /* Slightly larger emoji */
-  margin-right: 10px; /* Space between emoji and text */
+  content: '🛒';
+  font-size: 1.8rem;
+  margin-right: 10px;
+}
+
+/* Balloon container */
+.balloon-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.balloon {
+  font-size: 15rem;
+  cursor: pointer;
+  animation: float 2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.balloon:hover {
+  transform: scale(1.1);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(7);
+  }
+  50% {
+    transform: translateY(-150px);
+  }
+  100% {
+    transform: translateY(9);
+  }
+}
+
+/* Pop message */
+.pop-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e6f4ea;
+  color: #28a745;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  animation: popIn 0.5s ease-in-out;
+  text-align: center;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Sparkler container */
+.sparkler-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Sparkler element */
+.sparkler {
+  position: absolute;
+  width: 6px;
+  height: 30px;
+  background: linear-gradient(180deg, #ffd700, #ff4500);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 69, 0, 0.5);
+  animation: rainSparkler 1.5s linear forwards;
+  transform-origin: center;
+}
+
+/* Randomize sparkler positions and delays */
+.sparkler:nth-child(1) {
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.sparkler:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.2s;
+}
+
+.sparkler:nth-child(3) {
+  left: 70%;
+  animation-delay: 0.4s;
+}
+
+/* Sparkler raining animation */
+@keyframes rainSparkler {
+  0% {
+    transform: translateY(-100%) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(80vh) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Add a sparkling particle effect using pseudo-elements */
+.sparkler::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  animation: sparkleParticle 0.5s infinite alternate;
+}
+
+.sparkler::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffd700;
+  border-radius: 50%;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
+  animation: sparkleParticle 0.7s infinite alternate;
+}
+
+/* Sparkle particle animation */
+@keyframes sparkleParticle {
+  0% { transform: translateX(-50%) scale(1); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1.5); opacity: 0.5; }
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
-  .thank-you-message {
-    font-size: 1.4rem; /* Smaller font size on mobile */
+  .card-payment-form {
+    max-width: 100%;
     padding: 15px;
-    margin: 20px 10px; /* Adjust margins for smaller screens */
+  }
+
+  .card-payment-form h3 {
+    font-size: 1.3rem;
+  }
+
+  .card-payment-form input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .card-payment-form .confirm-payment-button {
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .thank-you-message {
+    font-size: 1.4rem;
+    padding: 15px;
+    margin: 20px 10px;
   }
 
   .cart-container h2:not(.thank-you-message) {
-    font-size: 1.3rem; /* Smaller font size on mobile */
+    font-size: 1.3rem;
     padding: 15px;
-    margin: 20px 10px; /* Adjust margins */
+    margin: 20px 10px;
   }
 
   .cart-container h2:not(.thank-you-message)::before {
-    font-size: 1.5rem; /* Smaller emoji on mobile */
+    font-size: 1.5rem;
+  }
+
+  .balloon {
+    font-size: 5rem;
+  }
+
+  .pop-message {
+    font-size: 1.2rem;
+    padding: 15px 20px;
+    max-width: 90%;
+  }
+
+  .sparkler {
+    width: 4px;
+    height: 20px;
+  }
+
+  .sparkler::before, .sparkler::after {
+    width: 3px;
+    height: 3px;
+  }
+
+  .coupon-checkboxes {
+    max-width: 100%; /* Adjust for smaller screens */
+  }
+
+  .checkbox-label {
+    font-size: 0.85rem;
+  }
+
+  .checkbox-label input {
+    width: 14px;
+    height: 14px;
   }
 }

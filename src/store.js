@@ -1084,59 +1084,123 @@ const orderSlice = createSlice({
 
 export let { addOrder } = orderSlice.actions;
 
-// User Slice
+// // User Slice
+// const userSlice = createSlice({
+//   name: 'users',
+//   initialState: {
+//     // email: null, // Current logged-in user's email (replaces userId)
+//     // userData: null, // Current logged-in user data
+//     // loggedInUsers: [], // Array of logged-in users, now using email
+//     // loginHistory: [], // Array of login timestamps, now using email
+//     // registeredEmails: [], // Array to store registered emails
+//        users : [],
+//        isAuthenticated : false ,
+//        currentUser : null,
+
+//   },
+//   reducers: {
+//         registerUser : (state, action) => {
+//           state.users.push(action.payload);
+//         }, 
+
+//         login : (state,action ) => {
+//           const foundUser = state.users.find(
+//             user => user.username === action.payload.username && user.password === action.payload.password
+//           );
+
+//           if(foundUser)
+//           {
+//             state.isAuthenticated = true;
+//             state.currentUser = foundUser;
+//           }
+//           else
+//           {
+//             alert("invalid Credentials")
+//           }
+//         },
+
+//         logout : (state) => {
+//           state.isAuthenticated = false;
+//           state.currentUser = null;
+//         }
+
+//     // login(state, action) {
+//     //   const { email, userData } = action.payload; // Use email instead of userId
+//     //   state.email = email;
+//     //   state.userData = userData;
+//     //   state.loggedInUsers = [
+//     //     ...state.loggedInUsers,
+//     //     { email, userData }, // Store email instead of userId
+//     //   ];
+//     //   state.loginHistory.push({
+//     //     email, // Use email instead of userId
+//     //     timestamp: new Date().toISOString(),
+//     //   });
+
+//     //   // Add email to registeredEmails if signing up with email
+//     //   if (userData.email) {
+//     //     state.registeredEmails = [
+//     //       ...state.registeredEmails,
+//     //       userData.email.toLowerCase(),
+//     //     ];
+//     //   }
+//     // },
+//     // logout(state, action) {
+//     //   const emailToLogout = action.payload; // Use email instead of userId
+//     //   state.loggedInUsers = state.loggedInUsers.filter(
+//     //     (user) => user.email !== emailToLogout
+//     //   );
+//     //   if (state.email === emailToLogout) {
+//     //     state.email = null;
+//     //     state.userData = null;
+//     //   }
+//     // },
+//   },
+// });
+
+// export const {registerUser, login, logout } = userSlice.actions;
+
 const userSlice = createSlice({
-  name: 'user',
+  name: 'users',
   initialState: {
-    email: null, // Current logged-in user's email (replaces userId)
-    userData: null, // Current logged-in user data
-    loggedInUsers: [], // Array of logged-in users, now using email
-    loginHistory: [], // Array of login timestamps, now using email
-    registeredEmails: [], // Array to store registered emails
+    users: [],
+    isAuthenticated: false,
+    currentUser: null,
   },
   reducers: {
-    login(state, action) {
-      const { email, userData } = action.payload; // Use email instead of userId
-      state.email = email;
-      state.userData = userData;
-      state.loggedInUsers = [
-        ...state.loggedInUsers,
-        { email, userData }, // Store email instead of userId
-      ];
-      state.loginHistory.push({
-        email, // Use email instead of userId
-        timestamp: new Date().toISOString(),
-      });
+    registerUser: (state, action) => {
+      state.users.push(action.payload);
+    },
+    login: (state, action) => {
+      const foundUser = state.users.find(
+        (user) =>
+          user.email === action.payload.email &&
+          user.password === action.payload.password
+      );
 
-      // Add email to registeredEmails if signing up with email
-      if (userData.email) {
-        state.registeredEmails = [
-          ...state.registeredEmails,
-          userData.email.toLowerCase(),
-        ];
+      if (foundUser) {
+        state.isAuthenticated = true;
+        state.currentUser = foundUser;
+      } else {
+        alert('Invalid Credentials');
       }
     },
-    logout(state, action) {
-      const emailToLogout = action.payload; // Use email instead of userId
-      state.loggedInUsers = state.loggedInUsers.filter(
-        (user) => user.email !== emailToLogout
-      );
-      if (state.email === emailToLogout) {
-        state.email = null;
-        state.userData = null;
-      }
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.currentUser = null;
     },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { registerUser, login, logout } = userSlice.actions;
+
 
 const store = configureStore({
   reducer: {
     products: productsSlice.reducer,
     cart: cartSlice.reducer,
     order: orderSlice.reducer,
-    user: userSlice.reducer,
+    users : userSlice.reducer,
   },
 });
 
